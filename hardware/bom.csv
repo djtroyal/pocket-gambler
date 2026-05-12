@@ -1,0 +1,27 @@
+Ref,Qty,Description,Value/MPN,Package,Supplier,Unit_Cost_USD,Extended_USD,Notes
+U1,1,Microcontroller,Raspberry Pi Pico (RP2040),Through-hole module,Raspberry Pi / Adafruit / LCSC,4.00,4.00,Use genuine Pico or Pico H (pre-soldered headers)
+U2,1,OLED Display,SSD1306 0.96in 128x64 I2C,Module,AliExpress / Amazon,1.80,1.80,4-pin I2C variant (VCC GND SCL SDA); most include pull-up resistors
+SW1,1,Button UP,6x6x5mm Tactile SPST,Through-hole,LCSC C318884 / generic,0.05,0.05,
+SW2,1,Button DOWN,6x6x5mm Tactile SPST,Through-hole,LCSC C318884 / generic,0.05,0.05,
+SW3,1,Button LEFT,6x6x5mm Tactile SPST,Through-hole,LCSC C318884 / generic,0.05,0.05,
+SW4,1,Button RIGHT,6x6x5mm Tactile SPST,Through-hole,LCSC C318884 / generic,0.05,0.05,
+SW5,1,Button A (Hit/Call),6x6x5mm Tactile SPST,Through-hole,LCSC C318884 / generic,0.05,0.05,
+SW6,1,Button B (Stand/Fold),6x6x5mm Tactile SPST,Through-hole,LCSC C318884 / generic,0.05,0.05,
+SW7,1,Button START,6x6x5mm Tactile SPST,Through-hole,LCSC C318884 / generic,0.05,0.05,
+SW8,1,Button SELECT,6x6x5mm Tactile SPST,Through-hole,LCSC C318884 / generic,0.05,0.05,
+SW9,1,Power Switch,SPDT Slide 3-pin 2.54mm pitch,Through-hole,LCSC C431541 / generic,0.10,0.10,
+BZ1,1,Piezo Buzzer,Passive 5mm 3V-5V,Through-hole,LCSC C96077 / generic,0.20,0.20,Passive type required (not active/self-driven)
+BT1,1,Battery Holder,2x AAA in series,Through-hole leads,Amazon / Digi-Key,0.50,0.50,Keystone 2463 or similar; 3V output
+R1,1,Pull-down resistor,100kohm 1/4W,Through-hole,LCSC / generic,0.02,0.02,Voltage divider high-side (battery monitor)
+R2,1,Pull-down resistor,200kohm 1/4W,Through-hole,LCSC / generic,0.02,0.02,Voltage divider low-side (battery monitor)
+C1,1,Decoupling capacitor,100nF ceramic,Through-hole,LCSC / generic,0.02,0.02,Place close to Pico VSYS pin
+C2,1,Decoupling capacitor,100nF ceramic,Through-hole,LCSC / generic,0.02,0.02,Place close to OLED VCC
+PCB,1,Perfboard,7x9cm single-sided,Through-hole,Amazon / AliExpress,0.80,0.80,Or order custom PCB from KiCad gerbers
+,,,,,,,,
+,,TOTAL,,,,,~$7.92,All prices approximate; shipping not included
+,,,,,,,,
+,,NOTES,,,,,,
+,,"1. The Pico H variant includes pre-soldered male headers making it easier to use in a perfboard build.",,,,,,,
+,,"2. SSD1306 modules with 4-pin I2C usually include 4.7kohm pull-ups on SDA/SCL. If yours does not, add 4.7kohm resistors from SDA and SCL to 3.3V.",,,,,,,
+,,"3. Total BOM cost under $10 when ordering in small quantities. Bulk pricing can reduce this to ~$5.",,,,,,,
+,,"4. Optional: add a 10uF electrolytic capacitor across the battery + and - for improved noise rejection.",,,,,,,
