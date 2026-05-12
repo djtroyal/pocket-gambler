@@ -1,0 +1,117 @@
+Pocket Gambler — ASCII Schematic
+=================================
+Net names: VCC = 3.3V from Pico 3V3OUT (pin 36)
+           VSYS = Battery positive (post switch)
+           GND  = Common ground
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+POWER SUPPLY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  [BT1: 2×AAA 3V]
+   (+)──[SW9: SPDT]──────────────────────── VSYS ──── Pico VSYS (Pin 39)
+   (-)────────────────────────────────────── GND ───── Pico GND  (Pin 38)
+                                              │
+                                           [C1: 100nF]
+                                              │
+                                             GND
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+BATTERY VOLTAGE MONITOR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  VSYS ──[R1: 100kΩ]──┬─── GPIO26 (ADC0, Pin 31)
+                      │
+                   [R2: 200kΩ]
+                      │
+                     GND
+
+  Divider ratio: V_GPIO26 = V_VSYS × 2/3
+  ADC reference = 3.3V, 12-bit (0–4095 counts)
+  V_bat (mV) = ADC_reading × 9900 / 8192
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SSD1306 OLED DISPLAY (I2C)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  VCC ─────────────────────── SSD1306 VCC
+  GPIO4 (SDA, Pin 6) ────────── SSD1306 SDA   [4.7kΩ pull-up to VCC if not on module]
+  GPIO5 (SCL, Pin 7) ────────── SSD1306 SCL   [4.7kΩ pull-up to VCC if not on module]
+  GND ─────────────────────────SSD1306 GND
+                                │
+                             [C2: 100nF]
+                                │
+                               GND
+
+  I2C Address: 0x3C (default) or 0x3D (if SA0 pin high)
+  Speed: 400kHz (Fast Mode)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TACTILE BUTTONS (active-low, internal pull-ups)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  GPIO6  (Pin 9)  ──[SW1: UP    ]── GND
+  GPIO7  (Pin 10) ──[SW2: DOWN  ]── GND
+  GPIO8  (Pin 11) ──[SW3: LEFT  ]── GND
+  GPIO9  (Pin 12) ──[SW4: RIGHT ]── GND
+  GPIO10 (Pin 14) ──[SW5: A     ]── GND    (Hit / Call / Check / Confirm)
+  GPIO11 (Pin 15) ──[SW6: B     ]── GND    (Stand / Fold / Cancel)
+  GPIO12 (Pin 16) ──[SW7: START ]── GND
+  GPIO13 (Pin 17) ──[SW8: SELECT]── GND
+
+  No external resistors needed; firmware enables RP2040 internal pull-ups.
+  Debounce: 5ms software debounce in buttons.c
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PASSIVE PIEZO BUZZER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  GPIO14 (Pin 19) ──[BZ1: passive piezo]── GND
+
+  GPIO14 is PWM7A. Firmware drives it with PWM at audio frequencies.
+  No series resistor needed; passive piezo impedance is sufficient.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+USB (PROGRAMMING ONLY)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Pico built-in micro-USB ── accessible through case side cutout
+  Used only for firmware flashing (BOOTSEL mode drag-and-drop UF2)
+  Not connected during normal battery-powered operation.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+COMPLETE PIN USAGE TABLE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  GPIO0–GPIO3   : Unused (available for expansion)
+  GPIO4         : I2C0 SDA → OLED
+  GPIO5         : I2C0 SCL → OLED
+  GPIO6         : Button UP (active-low input)
+  GPIO7         : Button DOWN (active-low input)
+  GPIO8         : Button LEFT (active-low input)
+  GPIO9         : Button RIGHT (active-low input)
+  GPIO10        : Button A (active-low input)
+  GPIO11        : Button B (active-low input)
+  GPIO12        : Button START (active-low input)
+  GPIO13        : Button SELECT (active-low input)
+  GPIO14        : PWM7A → Buzzer
+  GPIO15–GPIO25 : Unused (available for expansion)
+  GPIO26 (ADC0) : Battery voltage monitor (resistor divider)
+  GPIO27–GPIO29 : Unused ADC inputs
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+POWER CONSUMPTION ESTIMATES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  RP2040 at 48MHz (reduced from default 125MHz) : ~8mA
+  SSD1306 OLED active                           : ~0.3mA
+  Buttons (GPIO pull-ups, all released)         : ~0.1mA
+  Misc (ADC, leakage)                           : ~0.1mA
+  ──────────────────────────────────────────────────────
+  Total active                                  : ~8.5mA
+  2× AAA alkaline (1200mAh) / 8.5mA            : ~141 hours active play
+
+  DORMANT mode (all clocks off, GPIO wake)      : ~0.8mA
+  2× AAA / 0.8mA                               : ~1500 hours standby
+
+  Auto-sleep after 30 seconds of no input.
